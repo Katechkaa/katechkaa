@@ -1,4 +1,4 @@
-# TutorReminderBot
+# TutorReminderBot bark
 
 Telegram-бот для автоматических напоминаний ученикам о занятиях.
 
