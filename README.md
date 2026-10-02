@@ -1,4 +1,4 @@
-# TutorReminderBot
+# TutorReminderBot meow
 
 Telegram-бот для автоматических напоминаний ученикам о занятиях.
 
