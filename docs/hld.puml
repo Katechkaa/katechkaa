@@ -1,0 +1,44 @@
+@startuml
+!theme plain
+skinparam componentStyle uml2
+
+actor "Репетитор (Преподаватель)" as Tutor
+actor "Ученик" as Student
+actor "Администратор системы" as Admin
+
+cloud "Telegram IM" as TelegramPlatform {
+    component "Интерфейс Telegram-бота\n(TutorReminderBot)" as BotUI
+}
+
+rectangle "Сервер приложения (Python)" {
+    component "Обработчик команд\n(Бот-ядро / aiogram)" as Core
+    component "Планировщик задач\n(Фоновый шедулер / APScheduler)" as Scheduler
+}
+
+database "База данных (SQLite)" as DB {
+    folder "Таблицы:" {
+        [Пользователи / Ученики]
+        [Расписание уроков]
+        [Логи оплат]
+    }
+}
+
+cloud "Внешние API" as External {
+    [Telegram Bot API] as BotAPI
+}
+
+' Связи акторов с интерфейсом
+Tutor --> BotUI : Управление расписанием,\nкарточками учеников
+Student --> BotUI : Просмотр занятий,\nподтверждение уроков
+Admin --> Core : Мониторинг логов,\nтехническая поддержка
+
+' Связи интерфейса и внешнего API
+BotUI <--> BotAPI
+BotAPI <--> Core : Обработка webhook / long-polling
+
+' Внутренняя логика сервера
+Core --> DB : Запись / Чтение данных
+Scheduler --> DB : Проверка времени занятий
+Scheduler --> BotAPI : Автоматическая отправка\nнапоминаний за 24 часа
+
+@enduml
